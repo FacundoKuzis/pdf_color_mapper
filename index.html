@@ -203,8 +203,6 @@
 
     canvas {
       display: block;
-      max-width: 100%;
-      height: auto;
       border-radius: 8px;
     }
 
@@ -283,6 +281,32 @@
       margin-top: 12px;
     }
 
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .zoom-controls button {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .zoom-controls .zoom-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      min-width: 42px;
+      text-align: center;
+      user-select: none;
+    }
+
     @media (max-width: 920px) {
       .grid {
         grid-template-columns: 1fr;
@@ -333,7 +357,7 @@
           </div>
           <div class="field">
             <label for="target-light">Destino del claro</label>
-            <input type="color" id="target-light" value="#c8a070" />
+            <input type="color" id="target-light" value="#1a0e00" />
           </div>
         </div>
 
@@ -344,36 +368,59 @@
           </div>
           <div class="field">
             <label for="target-dark">Destino del oscuro</label>
-            <input type="color" id="target-dark" value="#1c0e00" />
+            <input type="color" id="target-dark" value="#c8a068" />
           </div>
         </div>
         <div class="field">
           <label>Presets</label>
           <div class="presets">
+            <button class="secondary-btn" type="button" data-preset="orodark">Oro oscuro</button>
+            <button class="secondary-btn" type="button" data-preset="amberdark">Ámbar</button>
+            <button class="secondary-btn" type="button" data-preset="sepiahc">Sepia</button>
+            <button class="secondary-btn" type="button" data-preset="nochecalida">Naranja oscuro</button>
+            <button class="secondary-btn" type="button" data-preset="sinreflejo">Ámbar invertido</button>
+            <button class="secondary-btn" type="button" data-preset="carbonrojo">Coral oscuro</button>
+            <button class="secondary-btn" type="button" data-preset="terracota">Terracota</button>
+            <button class="secondary-btn" type="button" data-preset="pizarronverde">Pizarra verde</button>
+            <button class="secondary-btn" type="button" data-preset="oceano">Azul marino</button>
+            <button class="secondary-btn" type="button" data-preset="azulprofundo">Azul profundo</button>
+            <button class="secondary-btn" type="button" data-preset="tintaazul">Azul y crema</button>
+            <button class="secondary-btn" type="button" data-preset="violetasuave">Violeta</button>
+            <button class="secondary-btn" type="button" data-preset="monocromofrio">Gris frío</button>
+            <button class="secondary-btn" type="button" data-preset="oliva">Oliva</button>
+            <button class="secondary-btn" type="button" data-preset="carbongris">Carbón gris</button>
+            <button class="secondary-btn" type="button" data-preset="chocolatenoche">Chocolate</button>
+            <button class="secondary-btn" type="button" data-preset="borgonanoche">Borgoña</button>
+            <button class="secondary-btn" type="button" data-preset="forestanoche">Bosque</button>
+            <button class="secondary-btn" type="button" data-preset="medianoched">Medianoche</button>
+            <button class="secondary-btn" type="button" data-preset="grafitodorado">Grafito dorado</button>
+            <button class="secondary-btn" type="button" data-preset="broncedark">Bronce</button>
+            <button class="secondary-btn" type="button" data-preset="cobrenoche">Cobre</button>
+            <button class="secondary-btn" type="button" data-preset="verdeolivo">Verde olivo</button>
+            <button class="secondary-btn" type="button" data-preset="azulacero">Azul acero</button>
+            <button class="secondary-btn" type="button" data-preset="ciruelo">Ciruelo</button>
+            <button class="secondary-btn" type="button" data-preset="esmeralda">Esmeralda</button>
             <button class="secondary-btn" type="button" data-preset="marronsuave">Café con leche</button>
             <button class="secondary-btn" type="button" data-preset="pergaminoantiguo">Pergamino</button>
             <button class="secondary-btn" type="button" data-preset="softpaper">Crema</button>
             <button class="secondary-btn" type="button" data-preset="papelamarillo">Amarillo</button>
-            <button class="secondary-btn" type="button" data-preset="amberdark">Ámbar</button>
-            <button class="secondary-btn" type="button" data-preset="sepiahc">Sepia</button>
             <button class="secondary-btn" type="button" data-preset="warmgray">Gris cálido</button>
-            <button class="secondary-btn" type="button" data-preset="monocromofrio">Gris frío</button>
-            <button class="secondary-btn" type="button" data-preset="sinreflejo">Ámbar invertido</button>
-            <button class="secondary-btn" type="button" data-preset="nochecalida">Naranja oscuro</button>
-            <button class="secondary-btn" type="button" data-preset="carbonrojo">Coral oscuro</button>
-            <button class="secondary-btn" type="button" data-preset="pizarronverde">Pizarra verde</button>
-            <button class="secondary-btn" type="button" data-preset="oceano">Azul marino</button>
-            <button class="secondary-btn" type="button" data-preset="tintaazul">Azul y crema</button>
-            <button class="secondary-btn" type="button" data-preset="violetasuave">Violeta</button>
             <button class="secondary-btn" type="button" data-preset="altacontraste">Blanco y negro</button>
             <button class="secondary-btn" type="button" data-preset="cieloazul">Cielo azul</button>
             <button class="secondary-btn" type="button" data-preset="azulhielo">Azul hielo</button>
-            <button class="secondary-btn" type="button" data-preset="azulprofundo">Azul profundo</button>
             <button class="secondary-btn" type="button" data-preset="menta">Menta</button>
             <button class="secondary-btn" type="button" data-preset="rosa">Rosa</button>
-            <button class="secondary-btn" type="button" data-preset="terracota">Terracota</button>
-            <button class="secondary-btn" type="button" data-preset="oliva">Oliva</button>
             <button class="secondary-btn" type="button" data-preset="lavanda">Lavanda</button>
+            <button class="secondary-btn" type="button" data-preset="arenasuave">Arena suave</button>
+            <button class="secondary-btn" type="button" data-preset="rosadopastel">Rosado pastel</button>
+            <button class="secondary-btn" type="button" data-preset="verdepastel">Verde pastel</button>
+            <button class="secondary-btn" type="button" data-preset="grisperla">Gris perla</button>
+            <button class="secondary-btn" type="button" data-preset="melocoton">Melocotón</button>
+            <button class="secondary-btn" type="button" data-preset="lilaclaro">Lila claro</button>
+            <button class="secondary-btn" type="button" data-preset="celeste">Celeste</button>
+            <button class="secondary-btn" type="button" data-preset="trigoclaro">Trigo claro</button>
+            <button class="secondary-btn" type="button" data-preset="salmonpastel">Salmón pastel</button>
+            <button class="secondary-btn" type="button" data-preset="jadeclaro">Jade claro</button>
           </div>
         </div>
 
@@ -407,6 +454,12 @@
       <div class="card preview-card">
         <div class="preview-toolbar">
           <div class="toolbar-group">
+            <div class="zoom-controls">
+              <button id="zoom-out" class="secondary-btn" title="Alejar">−</button>
+              <span class="zoom-label" id="zoom-label">150%</span>
+              <button id="zoom-in" class="secondary-btn" title="Acercar">+</button>
+              <button id="zoom-fit" class="secondary-btn" title="Ajustar" style="width:auto;padding:0 8px;font-size:0.8rem;">Ajustar</button>
+            </div>
             <span class="badge" id="status">Sin archivo cargado</span>
             <span class="badge" id="file-type-badge">Tipo: —</span>
             <span class="badge" id="page-indicator">Página 0 / 0</span>
@@ -461,8 +514,14 @@
     const previewCanvas = document.getElementById("preview-canvas");
     const previewCtx = previewCanvas.getContext("2d", { willReadFrequently: true });
 
+    const zoomInBtn = document.getElementById("zoom-in");
+    const zoomOutBtn = document.getElementById("zoom-out");
+    const zoomFitBtn = document.getElementById("zoom-fit");
+    const zoomLabelEl = document.getElementById("zoom-label");
+
     let pdfInstance = null;
     let currentPage = 1;
+    let zoomLevel = 150;
 
     let currentMode = null;
     let currentImage = null;
@@ -518,6 +577,14 @@
 
 
     const presets = {
+      orodark: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#1a0e00",
+        targetDark: "#c8a068",
+        threshold: 148,
+        softness: 65
+      },
       amberdark: {
         sourceLight: "#ffffff",
         sourceDark: "#000000",
@@ -709,6 +776,182 @@
         targetDark: "#28103a",
         threshold: 150,
         softness: 65
+      },
+      carbongris: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#141414",
+        targetDark: "#a8a098",
+        threshold: 146,
+        softness: 60
+      },
+      chocolatenoche: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#1a0c04",
+        targetDark: "#c49878",
+        threshold: 145,
+        softness: 62
+      },
+      borgonanoche: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#1a0808",
+        targetDark: "#c8888a",
+        threshold: 144,
+        softness: 58
+      },
+      forestanoche: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#081a0c",
+        targetDark: "#88b890",
+        threshold: 142,
+        softness: 58
+      },
+      medianoched: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#08081a",
+        targetDark: "#9098c0",
+        threshold: 145,
+        softness: 60
+      },
+      grafitodorado: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#1c1c18",
+        targetDark: "#b8a878",
+        threshold: 148,
+        softness: 62
+      },
+      broncedark: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#18100a",
+        targetDark: "#b89060",
+        threshold: 145,
+        softness: 60
+      },
+      cobrenoche: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#140a06",
+        targetDark: "#c88058",
+        threshold: 142,
+        softness: 55
+      },
+      verdeolivo: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#10140a",
+        targetDark: "#a0a870",
+        threshold: 144,
+        softness: 58
+      },
+      azulacero: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#0a1018",
+        targetDark: "#88a0b8",
+        threshold: 145,
+        softness: 60
+      },
+      ciruelo: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#140a18",
+        targetDark: "#a880b0",
+        threshold: 144,
+        softness: 58
+      },
+      esmeralda: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#061810",
+        targetDark: "#70b890",
+        threshold: 142,
+        softness: 56
+      },
+      arenasuave: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#f0e8d8",
+        targetDark: "#3a3020",
+        threshold: 150,
+        softness: 65
+      },
+      rosadopastel: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#f8e0e8",
+        targetDark: "#3a1828",
+        threshold: 150,
+        softness: 64
+      },
+      verdepastel: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#e0f0e4",
+        targetDark: "#182a1c",
+        threshold: 150,
+        softness: 64
+      },
+      grisperla: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#e8e8ec",
+        targetDark: "#20202a",
+        threshold: 150,
+        softness: 66
+      },
+      melocoton: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#f8e4d0",
+        targetDark: "#3a2010",
+        threshold: 148,
+        softness: 64
+      },
+      lilaclaro: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#ece0f4",
+        targetDark: "#241430",
+        threshold: 150,
+        softness: 64
+      },
+      celeste: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#d8ecf8",
+        targetDark: "#0c1e30",
+        threshold: 150,
+        softness: 64
+      },
+      trigoclaro: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#f0e8c8",
+        targetDark: "#302810",
+        threshold: 148,
+        softness: 64
+      },
+      salmonpastel: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#f8dcd0",
+        targetDark: "#381810",
+        threshold: 148,
+        softness: 62
+      },
+      jadeclaro: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#d4f0e4",
+        targetDark: "#0c2818",
+        threshold: 148,
+        softness: 64
       }
     };
     document.querySelectorAll("[data-preset]").forEach((btn) => {
@@ -728,6 +971,58 @@
           await renderPreviewImage();
         }
       });
+    });
+
+    function updateZoomLabel() {
+      zoomLabelEl.textContent = zoomLevel + "%";
+    }
+
+    function applyZoom() {
+      updateZoomLabel();
+      if (currentMode === "pdf" && pdfInstance) {
+        const page = pdfInstance.getPage(currentPage).then(p => {
+          const unscaled = p.getViewport({ scale: 1 });
+          const cssScale = zoomLevel / 100;
+          previewCanvas.style.width = Math.floor(unscaled.width * cssScale) + "px";
+          previewCanvas.style.height = Math.floor(unscaled.height * cssScale) + "px";
+        });
+      } else if (currentMode === "image" && currentImage) {
+        const cssScale = zoomLevel / 100;
+        previewCanvas.style.width = Math.round(currentImage.naturalWidth * cssScale) + "px";
+        previewCanvas.style.height = Math.round(currentImage.naturalHeight * cssScale) + "px";
+      }
+    }
+
+    zoomInBtn.addEventListener("click", () => {
+      zoomLevel = Math.min(400, zoomLevel + 25);
+      applyZoom();
+    });
+
+    zoomOutBtn.addEventListener("click", () => {
+      zoomLevel = Math.max(25, zoomLevel - 25);
+      applyZoom();
+    });
+
+    zoomFitBtn.addEventListener("click", () => {
+      const wrap = document.querySelector(".canvas-wrap");
+      const wrapWidth = wrap.clientWidth - 24;
+      let naturalW = 0;
+      if (currentMode === "pdf" && pdfInstance) {
+        pdfInstance.getPage(currentPage).then(p => {
+          const unscaled = p.getViewport({ scale: 1 });
+          zoomLevel = Math.round((wrapWidth / unscaled.width) * 100);
+          zoomLevel = Math.max(25, Math.min(400, zoomLevel));
+          applyZoom();
+        });
+        return;
+      } else if (currentMode === "image" && currentImage) {
+        naturalW = currentImage.naturalWidth;
+      }
+      if (naturalW > 0) {
+        zoomLevel = Math.round((wrapWidth / naturalW) * 100);
+        zoomLevel = Math.max(25, Math.min(400, zoomLevel));
+      }
+      applyZoom();
     });
 
     function mapCanvasColors(ctx, width, height) {
@@ -851,17 +1146,9 @@
       statusEl.textContent = "Renderizando preview...";
       fileTypeBadgeEl.textContent = "Tipo: imagen";
 
-      const dpr = window.devicePixelRatio || 1;
-      const maxPreviewWidth = 1100;
-      const maxPreviewHeight = 1500;
-      const cssScale = Math.min(
-        1,
-        maxPreviewWidth / currentImage.naturalWidth,
-        maxPreviewHeight / currentImage.naturalHeight
-      );
-      const renderScale = cssScale * dpr;
+      const cssScale = zoomLevel / 100;
 
-      renderImageToCanvas(currentImage, renderScale, previewCanvas, previewCtx);
+      renderImageToCanvas(currentImage, 1, previewCanvas, previewCtx);
 
       previewCanvas.style.width = Math.round(currentImage.naturalWidth * cssScale) + "px";
       previewCanvas.style.height = Math.round(currentImage.naturalHeight * cssScale) + "px";
@@ -901,14 +1188,7 @@
 
       const resolution = Number(resolutionSelect.value);
       const exportScale = resolution / 72;
-
-      const maxPreviewWidth = 1100;
-      const maxPreviewHeight = 1500;
-      const cssScale = Math.min(
-        1,
-        maxPreviewWidth / unscaled.width,
-        maxPreviewHeight / unscaled.height
-      );
+      const cssScale = zoomLevel / 100;
 
       await renderPageToCanvas(pageNumber, exportScale, previewCanvas, previewCtx);
 
