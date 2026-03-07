@@ -244,6 +244,45 @@
       font-size: 0.84rem;
     }
 
+    details.advanced {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel-2);
+      padding: 10px 12px;
+    }
+
+    details.advanced summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.95rem;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    details.advanced summary::before {
+      content: "▶";
+      font-size: 0.7rem;
+      transition: transform 0.2s ease;
+    }
+
+    details.advanced[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    details.advanced summary:hover {
+      color: var(--text);
+    }
+
+    details.advanced .inner {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
     @media (max-width: 920px) {
       .grid {
         grid-template-columns: 1fr;
@@ -307,43 +346,41 @@
           </div>
         </div>
         <div class="field">
-          <label for="threshold">Umbral</label>
-          <div class="range-line">
-            <input type="range" id="threshold" min="0" max="255" value="145" />
-            <input type="number" id="threshold-number" min="0" max="255" value="145" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="softness">Suavidad</label>
-          <div class="range-line">
-            <input type="range" id="softness" min="1" max="255" value="75" />
-            <input type="number" id="softness-number" min="1" max="255" value="75" />
-          </div>
-        </div>
-        <div class="field">
           <label>Presets</label>
           <div class="presets">
             <button class="secondary-btn" type="button" data-preset="amberdark">Ámbar oscuro</button>
             <button class="secondary-btn" type="button" data-preset="sepiahc">Sepia alto contraste</button>
             <button class="secondary-btn" type="button" data-preset="warmgray">Gris cálido</button>
             <button class="secondary-btn" type="button" data-preset="softpaper">Papel crema</button>
-          </div>
-        </div>
-
-        <div class="swatches">
-          <div class="swatch">
-            <div class="swatch-title">Fondo destino</div>
-            <div id="bg-swatch" class="swatch-box"></div>
-          </div>
-          <div class="swatch">
-            <div class="swatch-title">Texto destino</div>
-            <div id="fg-swatch" class="swatch-box"></div>
+            <button class="secondary-btn" type="button" data-preset="altacontraste">Alto contraste</button>
+            <button class="secondary-btn" type="button" data-preset="papelamarillo">Papel amarillo</button>
+            <button class="secondary-btn" type="button" data-preset="sinreflejo">Sin deslumbramiento</button>
+            <button class="secondary-btn" type="button" data-preset="nochecalida">Noche cálida</button>
           </div>
         </div>
 
         <button id="preview-button" class="secondary-btn" disabled>Actualizar preview</button>
         <button id="download-button" class="action-btn" disabled>Descargar archivo</button>
+
+        <details class="advanced">
+          <summary>Configuración avanzada</summary>
+          <div class="inner">
+            <div class="field">
+              <label for="threshold">Umbral</label>
+              <div class="range-line">
+                <input type="range" id="threshold" min="0" max="255" value="145" />
+                <input type="number" id="threshold-number" min="0" max="255" value="145" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="softness">Suavidad</label>
+              <div class="range-line">
+                <input type="range" id="softness" min="1" max="255" value="75" />
+                <input type="number" id="softness-number" min="1" max="255" value="75" />
+              </div>
+            </div>
+          </div>
+        </details>
 
         <div class="note">
           En PDF, el archivo final no conserva texto seleccionable porque cada página se rasteriza.
@@ -404,9 +441,6 @@
     const statusEl = document.getElementById("status");
     const fileTypeBadgeEl = document.getElementById("file-type-badge");
     const pageIndicatorEl = document.getElementById("page-indicator");
-    const bgSwatch = document.getElementById("bg-swatch");
-    const fgSwatch = document.getElementById("fg-swatch");
-
     const previewCanvas = document.getElementById("preview-canvas");
     const previewCtx = previewCanvas.getContext("2d", { willReadFrequently: true });
 
@@ -465,16 +499,6 @@
       };
     }
 
-    function updateSwatches() {
-      bgSwatch.style.background = targetLightInput.value;
-      fgSwatch.style.background = targetDarkInput.value;
-    }
-
-    updateSwatches();
-
-    [targetLightInput, targetDarkInput].forEach((el) => {
-      el.addEventListener("input", updateSwatches);
-    });
 
     const presets = {
       amberdark: {
@@ -508,6 +532,38 @@
         targetDark: "#4a3a28",
         threshold: 142,
         softness: 72
+      },
+      altacontraste: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#ffffff",
+        targetDark: "#000000",
+        threshold: 165,
+        softness: 28
+      },
+      papelamarillo: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#f5ef7a",
+        targetDark: "#1a1200",
+        threshold: 155,
+        softness: 45
+      },
+      sinreflejo: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#100d08",
+        targetDark: "#ffe680",
+        threshold: 138,
+        softness: 50
+      },
+      nochecalida: {
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#1a0e00",
+        targetDark: "#ffcc88",
+        threshold: 145,
+        softness: 55
       }
     };
     document.querySelectorAll("[data-preset]").forEach((btn) => {
@@ -521,8 +577,6 @@
         thresholdNumberInput.value = String(preset.threshold);
         softnessInput.value = String(preset.softness);
         softnessNumberInput.value = String(preset.softness);
-        updateSwatches();
-
         if (currentMode === "pdf" && pdfInstance) {
           await renderPreviewPage(currentPage);
         } else if (currentMode === "image" && currentImage) {
