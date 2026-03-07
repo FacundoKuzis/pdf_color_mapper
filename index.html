@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Color Mapper</title>
+  <title>PDF / Image Color Mapper</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,16 +11,19 @@
   <style>
     :root {
       --bg: #111111;
-      --panel: #1c1c1c;
+      --panel: #1b1b1b;
       --panel-2: #242424;
-      --text: #e8e6e3;
-      --muted: #b5b0aa;
-      --border: #3a3a3a;
+      --text: #ece8e1;
+      --muted: #b8b2aa;
+      --border: #393939;
       --accent: #8c6a4d;
-      --accent-2: #d8c6a8;
+      --accent-2: #3c3631;
+      --danger: #8f4b4b;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -31,33 +34,33 @@
     }
 
     .wrap {
-      width: min(1100px, 94vw);
-      margin: 32px auto;
+      width: min(1180px, 94vw);
+      margin: 28px auto;
     }
 
     h1 {
-      margin: 0 0 10px;
+      margin: 0 0 8px;
       font-size: 2rem;
     }
 
     .subtitle {
+      margin: 0 0 22px;
       color: var(--muted);
-      margin-bottom: 24px;
       line-height: 1.45;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 380px 1fr;
       gap: 20px;
     }
 
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.18);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
     }
 
     .controls {
@@ -73,32 +76,36 @@
     }
 
     .field label {
-      font-size: .95rem;
       color: var(--muted);
+      font-size: 0.95rem;
     }
 
     input[type="file"],
     input[type="text"],
     input[type="number"],
     input[type="range"],
-    button,
-    select {
+    input[type="color"],
+    select,
+    button {
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
       border: 1px solid var(--border);
+      border-radius: 10px;
       background: var(--panel-2);
       color: var(--text);
       font-size: 0.95rem;
     }
 
+    input[type="file"],
+    input[type="text"],
+    input[type="number"],
+    select,
+    button {
+      padding: 10px 12px;
+    }
+
     input[type="color"] {
-      width: 100%;
-      height: 44px;
       padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--panel-2);
+      height: 44px;
     }
 
     .row-2 {
@@ -109,7 +116,7 @@
 
     .range-line {
       display: grid;
-      grid-template-columns: 1fr 70px;
+      grid-template-columns: 1fr 72px;
       gap: 10px;
       align-items: center;
     }
@@ -120,15 +127,19 @@
       gap: 8px;
     }
 
-    .preset-btn,
-    .action-btn {
+    button {
       cursor: pointer;
-      transition: transform .15s ease, opacity .15s ease, background .15s ease;
+      transition: transform 0.14s ease, opacity 0.14s ease, background 0.14s ease;
     }
 
-    .preset-btn:hover,
-    .action-btn:hover {
+    button:hover {
       transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .action-btn {
@@ -138,14 +149,14 @@
       font-weight: 700;
     }
 
-    .action-btn.secondary {
-      background: #3f3a35;
+    .secondary-btn {
+      background: var(--accent-2);
+      color: var(--text);
     }
 
-    .action-btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
+    .danger-btn {
+      background: var(--danger);
+      color: #fff;
     }
 
     .preview-card {
@@ -156,52 +167,45 @@
 
     .preview-toolbar {
       display: flex;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 12px;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: space-between;
     }
 
-    .preview-toolbar .left,
-    .preview-toolbar .right {
+    .toolbar-group {
       display: flex;
       gap: 10px;
-      align-items: center;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .badge {
       border: 1px solid var(--border);
+      background: var(--panel-2);
       border-radius: 999px;
       padding: 7px 12px;
       color: var(--muted);
-      font-size: .9rem;
-      background: var(--panel-2);
+      font-size: 0.9rem;
     }
 
     .canvas-wrap {
-      background: #0d0d0d;
+      min-height: 420px;
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 12px;
-      overflow: auto;
-      min-height: 400px;
+      background: #0d0d0d;
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      overflow: auto;
     }
 
     canvas {
+      display: block;
       max-width: 100%;
       height: auto;
-      display: block;
       border-radius: 8px;
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: .9rem;
-      line-height: 1.45;
     }
 
     .swatches {
@@ -213,18 +217,34 @@
     .swatch {
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 10px;
       background: var(--panel-2);
+      padding: 10px;
+    }
+
+    .swatch-title {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
     }
 
     .swatch-box {
       height: 36px;
       border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.08);
-      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    @media (max-width: 900px) {
+    .note {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    @media (max-width: 920px) {
       .grid {
         grid-template-columns: 1fr;
       }
@@ -233,108 +253,116 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>PDF Color Mapper</h1>
-    <div class="subtitle">
-      Convierte un PDF rasterizando cada página y remapeando colores. Ideal para crear una versión más amigable para ojos sensibles al blanco.
-    </div>
+    <h1>PDF / Image Color Mapper</h1>
+    <p class="subtitle">
+      Cargá un PDF, PNG o JPG, elegí los colores de origen y destino, previsualizá el resultado y descargalo.
+      Los PDF se reconstruyen como imágenes dentro de un PDF nuevo.
+    </p>
 
     <div class="grid">
       <div class="card controls">
         <div class="field">
-          <label for="upload">PDF</label>
-          <input type="file" id="upload" accept=".pdf,application/pdf">
+          <label for="upload">Archivo</label>
+          <input
+            type="file"
+            id="upload"
+            accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"
+          />
         </div>
 
         <div class="field">
           <label for="file-name">Nombre del archivo de salida</label>
-          <input type="text" id="file-name" value="pdf_remapeado">
+          <input type="text" id="file-name" value="archivo_remapeado" />
         </div>
 
         <div class="field">
-          <label for="resolution">Resolución</label>
+          <label for="resolution">Resolución de exportación PDF</label>
           <select id="resolution">
             <option value="72">72 PPI (bajo)</option>
             <option value="150" selected>150 PPI (medio)</option>
             <option value="300">300 PPI (alto)</option>
           </select>
+          <div class="small-note">Para PNG/JPG no afecta la exportación.</div>
         </div>
 
         <div class="row-2">
           <div class="field">
             <label for="source-light">Color claro origen</label>
-            <input type="color" id="source-light" value="#ffffff">
+            <input type="color" id="source-light" value="#ffffff" />
           </div>
           <div class="field">
             <label for="target-light">Destino del claro</label>
-            <input type="color" id="target-light" value="#2b2118">
+            <input type="color" id="target-light" value="#2b2118" />
           </div>
         </div>
 
         <div class="row-2">
           <div class="field">
             <label for="source-dark">Color oscuro origen</label>
-            <input type="color" id="source-dark" value="#000000">
+            <input type="color" id="source-dark" value="#000000" />
           </div>
           <div class="field">
             <label for="target-dark">Destino del oscuro</label>
-            <input type="color" id="target-dark" value="#e6d7b8">
+            <input type="color" id="target-dark" value="#e6d7b8" />
           </div>
         </div>
 
         <div class="field">
           <label for="threshold">Umbral</label>
           <div class="range-line">
-            <input type="range" id="threshold" min="0" max="255" value="140">
-            <input type="number" id="threshold-number" min="0" max="255" value="140">
+            <input type="range" id="threshold" min="0" max="255" value="140" />
+            <input type="number" id="threshold-number" min="0" max="255" value="140" />
           </div>
         </div>
 
         <div class="field">
-          <label for="softness">Suavidad de transición</label>
+          <label for="softness">Suavidad</label>
           <div class="range-line">
-            <input type="range" id="softness" min="1" max="255" value="70">
-            <input type="number" id="softness-number" min="1" max="255" value="70">
+            <input type="range" id="softness" min="1" max="255" value="70" />
+            <input type="number" id="softness-number" min="1" max="255" value="70" />
           </div>
         </div>
 
         <div class="field">
           <label>Presets</label>
           <div class="presets">
-            <button class="preset-btn" type="button" data-preset="sepia">Sepia suave</button>
-            <button class="preset-btn" type="button" data-preset="warmdark">Oscuro cálido</button>
-            <button class="preset-btn" type="button" data-preset="paper">Papel viejo</button>
-            <button class="preset-btn" type="button" data-preset="green">Terminal suave</button>
+            <button class="secondary-btn" type="button" data-preset="sepia">Sepia suave</button>
+            <button class="secondary-btn" type="button" data-preset="warmdark">Oscuro cálido</button>
+            <button class="secondary-btn" type="button" data-preset="paper">Papel viejo</button>
+            <button class="secondary-btn" type="button" data-preset="green">Verde suave</button>
           </div>
         </div>
 
         <div class="swatches">
           <div class="swatch">
-            <div>Fondo destino</div>
+            <div class="swatch-title">Fondo destino</div>
             <div id="bg-swatch" class="swatch-box"></div>
           </div>
           <div class="swatch">
-            <div>Texto destino</div>
+            <div class="swatch-title">Texto destino</div>
             <div id="fg-swatch" class="swatch-box"></div>
           </div>
         </div>
 
-        <button id="preview-button" class="action-btn secondary" disabled>Actualizar preview</button>
-        <button id="download-button" class="action-btn" disabled>Descargar PDF remapeado</button>
+        <button id="preview-button" class="secondary-btn" disabled>Actualizar preview</button>
+        <button id="download-button" class="action-btn" disabled>Descargar archivo</button>
 
         <div class="note">
-          Esta técnica convierte cada página en imagen. Es muy útil para lectura visual, pero el PDF final no conserva texto seleccionable.
+          En PDF, el archivo final no conserva texto seleccionable porque cada página se rasteriza.
         </div>
       </div>
 
       <div class="card preview-card">
         <div class="preview-toolbar">
-          <div class="left">
-            <span class="badge" id="status">Sin PDF cargado</span>
+          <div class="toolbar-group">
+            <span class="badge" id="status">Sin archivo cargado</span>
+            <span class="badge" id="file-type-badge">Tipo: —</span>
             <span class="badge" id="page-indicator">Página 0 / 0</span>
           </div>
-          <div class="right">
-            <button id="prev-page" class="action-btn secondary" disabled>Anterior</button>
-            <button id="next-page" class="action-btn secondary" disabled>Siguiente</button>
+
+          <div class="toolbar-group">
+            <button id="prev-page" class="secondary-btn" disabled>Anterior</button>
+            <button id="next-page" class="secondary-btn" disabled>Siguiente</button>
           </div>
         </div>
 
@@ -350,83 +378,93 @@
   </div>
 
   <script>
-    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    const pdfjsLib = window["pdfjs-dist/build/pdf"];
     pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
     const { jsPDF } = window.jspdf;
 
-    const uploadInput = document.getElementById('upload');
-    const fileNameInput = document.getElementById('file-name');
-    const resolutionSelect = document.getElementById('resolution');
+    const uploadInput = document.getElementById("upload");
+    const fileNameInput = document.getElementById("file-name");
+    const resolutionSelect = document.getElementById("resolution");
 
-    const sourceLightInput = document.getElementById('source-light');
-    const sourceDarkInput = document.getElementById('source-dark');
-    const targetLightInput = document.getElementById('target-light');
-    const targetDarkInput = document.getElementById('target-dark');
+    const sourceLightInput = document.getElementById("source-light");
+    const sourceDarkInput = document.getElementById("source-dark");
+    const targetLightInput = document.getElementById("target-light");
+    const targetDarkInput = document.getElementById("target-dark");
 
-    const thresholdInput = document.getElementById('threshold');
-    const thresholdNumberInput = document.getElementById('threshold-number');
-    const softnessInput = document.getElementById('softness');
-    const softnessNumberInput = document.getElementById('softness-number');
+    const thresholdInput = document.getElementById("threshold");
+    const thresholdNumberInput = document.getElementById("threshold-number");
+    const softnessInput = document.getElementById("softness");
+    const softnessNumberInput = document.getElementById("softness-number");
 
-    const previewButton = document.getElementById('preview-button');
-    const downloadButton = document.getElementById('download-button');
-    const prevPageButton = document.getElementById('prev-page');
-    const nextPageButton = document.getElementById('next-page');
+    const previewButton = document.getElementById("preview-button");
+    const downloadButton = document.getElementById("download-button");
+    const prevPageButton = document.getElementById("prev-page");
+    const nextPageButton = document.getElementById("next-page");
 
-    const statusEl = document.getElementById('status');
-    const pageIndicatorEl = document.getElementById('page-indicator');
-    const bgSwatch = document.getElementById('bg-swatch');
-    const fgSwatch = document.getElementById('fg-swatch');
+    const statusEl = document.getElementById("status");
+    const fileTypeBadgeEl = document.getElementById("file-type-badge");
+    const pageIndicatorEl = document.getElementById("page-indicator");
+    const bgSwatch = document.getElementById("bg-swatch");
+    const fgSwatch = document.getElementById("fg-swatch");
 
-    const previewCanvas = document.getElementById('preview-canvas');
-    const previewCtx = previewCanvas.getContext('2d', { willReadFrequently: true });
+    const previewCanvas = document.getElementById("preview-canvas");
+    const previewCtx = previewCanvas.getContext("2d", { willReadFrequently: true });
 
     let pdfInstance = null;
     let currentPage = 1;
 
+    let currentMode = null;
+    let currentImage = null;
+    let currentImageName = "";
+    let currentImageType = "";
+
     function syncRangeAndNumber(rangeEl, numberEl) {
-      rangeEl.addEventListener('input', () => {
+      rangeEl.addEventListener("input", () => {
         numberEl.value = rangeEl.value;
       });
-      numberEl.addEventListener('input', () => {
+
+      numberEl.addEventListener("input", () => {
         let v = Number(numberEl.value);
         if (Number.isNaN(v)) return;
         v = Math.max(Number(rangeEl.min), Math.min(Number(rangeEl.max), v));
-        rangeEl.value = v;
-        numberEl.value = v;
+        rangeEl.value = String(v);
+        numberEl.value = String(v);
       });
     }
 
     syncRangeAndNumber(thresholdInput, thresholdNumberInput);
     syncRangeAndNumber(softnessInput, softnessNumberInput);
 
-    function hexToRgb(hex) {
-      const clean = hex.replace('#', '');
-      const bigint = parseInt(clean, 16);
-      return {
-        r: (bigint >> 16) & 255,
-        g: (bigint >> 8) & 255,
-        b: bigint & 255
-      };
+    function clamp(x, min, max) {
+      return Math.max(min, Math.min(max, x));
+    }
+
+    function smoothstep(edge0, edge1, x) {
+      if (edge0 === edge1) {
+        return x < edge0 ? 0 : 1;
+      }
+      const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+      return t * t * (3 - 2 * t);
     }
 
     function lerp(a, b, t) {
       return a + (b - a) * t;
     }
 
-    function clamp(x, min, max) {
-      return Math.max(min, Math.min(max, x));
-    }
-
-    function smoothstep(edge0, edge1, x) {
-      const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
-      return t * t * (3 - 2 * t);
-    }
-
     function luminance(r, g, b) {
       return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    function hexToRgb(hex) {
+      const clean = hex.replace("#", "");
+      const bigint = parseInt(clean, 16);
+      return {
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
+        b: bigint & 255
+      };
     }
 
     function updateSwatches() {
@@ -436,58 +474,63 @@
 
     updateSwatches();
 
-    [targetLightInput, targetDarkInput].forEach(el => {
-      el.addEventListener('input', updateSwatches);
+    [targetLightInput, targetDarkInput].forEach((el) => {
+      el.addEventListener("input", updateSwatches);
     });
 
     const presets = {
       sepia: {
-        sourceLight: '#ffffff',
-        sourceDark: '#000000',
-        targetLight: '#2b2118',
-        targetDark: '#e6d7b8',
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#2b2118",
+        targetDark: "#e6d7b8",
         threshold: 140,
         softness: 70
       },
       warmdark: {
-        sourceLight: '#ffffff',
-        sourceDark: '#000000',
-        targetLight: '#1f1b18',
-        targetDark: '#d8cbb8',
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#1f1b18",
+        targetDark: "#d8cbb8",
         threshold: 145,
         softness: 75
       },
       paper: {
-        sourceLight: '#ffffff',
-        sourceDark: '#000000',
-        targetLight: '#e8dfc8',
-        targetDark: '#4a3b2a',
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#e8dfc8",
+        targetDark: "#4a3b2a",
         threshold: 145,
         softness: 65
       },
       green: {
-        sourceLight: '#ffffff',
-        sourceDark: '#000000',
-        targetLight: '#111713',
-        targetDark: '#b8d8b0',
+        sourceLight: "#ffffff",
+        sourceDark: "#000000",
+        targetLight: "#111713",
+        targetDark: "#b8d8b0",
         threshold: 140,
         softness: 70
       }
     };
 
-    document.querySelectorAll('[data-preset]').forEach(btn => {
-      btn.addEventListener('click', () => {
+    document.querySelectorAll("[data-preset]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
         const preset = presets[btn.dataset.preset];
         sourceLightInput.value = preset.sourceLight;
         sourceDarkInput.value = preset.sourceDark;
         targetLightInput.value = preset.targetLight;
         targetDarkInput.value = preset.targetDark;
-        thresholdInput.value = preset.threshold;
-        thresholdNumberInput.value = preset.threshold;
-        softnessInput.value = preset.softness;
-        softnessNumberInput.value = preset.softness;
+        thresholdInput.value = String(preset.threshold);
+        thresholdNumberInput.value = String(preset.threshold);
+        softnessInput.value = String(preset.softness);
+        softnessNumberInput.value = String(preset.softness);
         updateSwatches();
-        if (pdfInstance) renderPreviewPage(currentPage);
+
+        if (currentMode === "pdf" && pdfInstance) {
+          await renderPreviewPage(currentPage);
+        } else if (currentMode === "image" && currentImage) {
+          await renderPreviewImage();
+        }
       });
     });
 
@@ -503,34 +546,130 @@
       const lumSourceLight = luminance(sourceLight.r, sourceLight.g, sourceLight.b);
       const lumSourceDark = luminance(sourceDark.r, sourceDark.g, sourceDark.b);
 
-      const threshold = Number(thresholdInput.value);
-      const softness = Math.max(1, Number(softnessInput.value));
+      const denom = lumSourceLight - lumSourceDark;
+      const thresholdNorm = Number(thresholdInput.value) / 255;
+      const softnessNorm = Math.max(1, Number(softnessInput.value)) / 255;
 
-      const low = threshold - softness / 2;
-      const high = threshold + softness / 2;
+      const low = clamp(thresholdNorm - softnessNorm / 2, 0, 1);
+      const high = clamp(thresholdNorm + softnessNorm / 2, 0, 1);
 
       for (let i = 0; i < data.length; i += 4) {
+        const a = data[i + 3];
+        if (a === 0) continue;
+
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
-        const a = data[i + 3];
-
-        if (a === 0) continue;
-
         const lum = luminance(r, g, b);
 
-        let t = smoothstep(low, high, lum);
-
-        if (lumSourceLight < lumSourceDark) {
-          t = 1 - t;
+        let baseT;
+        if (Math.abs(denom) < 1e-6) {
+          baseT = lum >= Number(thresholdInput.value) ? 1 : 0;
+        } else {
+          baseT = (lum - lumSourceDark) / denom;
         }
 
-        data[i]     = Math.round(lerp(targetDark.r, targetLight.r, t));
-        data[i + 1] = Math.round(lerp(targetDark.g, targetLight.g, t));
-        data[i + 2] = Math.round(lerp(targetDark.b, targetLight.b, t));
+        baseT = clamp(baseT, 0, 1);
+        const shapedT = smoothstep(low, high, baseT);
+
+        data[i] = Math.round(lerp(targetDark.r, targetLight.r, shapedT));
+        data[i + 1] = Math.round(lerp(targetDark.g, targetLight.g, shapedT));
+        data[i + 2] = Math.round(lerp(targetDark.b, targetLight.b, shapedT));
       }
 
       ctx.putImageData(imageData, 0, 0);
+    }
+
+    function isPdfFile(file) {
+      return file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+    }
+
+    function isImageFile(file) {
+      return /image\/(png|jpeg)/.test(file.type) || /\.(png|jpe?g)$/i.test(file.name);
+    }
+
+    function baseNameWithoutExt(name) {
+      return name.replace(/\.[^.]+$/, "");
+    }
+
+    function canvasToBlob(canvas, type, quality) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("No se pudo generar el archivo."));
+        }, type, quality);
+      });
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1200);
+    }
+
+    function loadImageElementFromFile(file) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          resolve(img);
+        };
+
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("No se pudo cargar la imagen."));
+        };
+
+        img.src = url;
+      });
+    }
+
+    function resetNavigation() {
+      prevPageButton.disabled = true;
+      nextPageButton.disabled = true;
+    }
+
+    function setLoadedState(loaded) {
+      previewButton.disabled = !loaded;
+      downloadButton.disabled = !loaded;
+    }
+
+    function renderImageToCanvas(img, scale, canvas, ctx) {
+      canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      mapCanvasColors(ctx, canvas.width, canvas.height);
+    }
+
+    async function renderPreviewImage() {
+      if (!currentImage) return;
+
+      statusEl.textContent = "Renderizando preview...";
+      fileTypeBadgeEl.textContent = "Tipo: imagen";
+
+      const maxPreviewWidth = 1100;
+      const maxPreviewHeight = 1500;
+      const scale = Math.min(
+        1,
+        maxPreviewWidth / currentImage.naturalWidth,
+        maxPreviewHeight / currentImage.naturalHeight
+      );
+
+      renderImageToCanvas(currentImage, scale, previewCanvas, previewCtx);
+
+      pageIndicatorEl.textContent =
+        `Imagen ${currentImage.naturalWidth} × ${currentImage.naturalHeight}`;
+
+      resetNavigation();
+      statusEl.textContent = "Preview listo";
     }
 
     async function renderPageToCanvas(pageNumber, scale, canvas, ctx) {
@@ -553,129 +692,200 @@
     async function renderPreviewPage(pageNumber) {
       if (!pdfInstance) return;
 
-      statusEl.textContent = 'Renderizando preview...';
+      statusEl.textContent = "Renderizando preview...";
+      fileTypeBadgeEl.textContent = "Tipo: PDF";
 
-      const previewScale = 1.3;
+      const page = await pdfInstance.getPage(pageNumber);
+      const unscaled = page.getViewport({ scale: 1 });
+
+      const maxPreviewWidth = 1100;
+      const maxPreviewHeight = 1500;
+      const previewScale = Math.min(
+        1.6,
+        maxPreviewWidth / unscaled.width,
+        maxPreviewHeight / unscaled.height
+      );
+
       await renderPageToCanvas(pageNumber, previewScale, previewCanvas, previewCtx);
 
-      statusEl.textContent = 'Preview listo';
       pageIndicatorEl.textContent = `Página ${pageNumber} / ${pdfInstance.numPages}`;
-
       prevPageButton.disabled = pageNumber <= 1;
       nextPageButton.disabled = pageNumber >= pdfInstance.numPages;
+      statusEl.textContent = "Preview listo";
     }
 
-    uploadInput.addEventListener('change', async (event) => {
+    async function exportCurrentImage() {
+      if (!currentImage) return;
+
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d", { willReadFrequently: true });
+      renderImageToCanvas(currentImage, 1, tempCanvas, tempCtx);
+
+      const baseName = (fileNameInput.value || baseNameWithoutExt(currentImageName)).trim();
+      const isPng = /png$/i.test(currentImageName) || currentImageType === "image/png";
+
+      if (isPng) {
+        const blob = await canvasToBlob(tempCanvas, "image/png");
+        downloadBlob(blob, `${baseName}.png`);
+      } else {
+        const blob = await canvasToBlob(tempCanvas, "image/jpeg", 0.92);
+        downloadBlob(blob, `${baseName}.jpg`);
+      }
+    }
+
+    uploadInput.addEventListener("change", async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      if (file.type !== 'application/pdf') {
-        alert('Subí un archivo PDF válido.');
-        return;
-      }
-
-      const url = URL.createObjectURL(file);
+      setLoadedState(false);
+      pdfInstance = null;
+      currentImage = null;
+      currentMode = null;
+      currentPage = 1;
+      resetNavigation();
 
       try {
-        statusEl.textContent = 'Cargando PDF...';
-        pdfInstance = await pdfjsLib.getDocument(url).promise;
-        currentPage = 1;
+        if (isPdfFile(file)) {
+          statusEl.textContent = "Cargando PDF...";
+          fileTypeBadgeEl.textContent = "Tipo: PDF";
 
-        previewButton.disabled = false;
-        downloadButton.disabled = false;
-        prevPageButton.disabled = false;
-        nextPageButton.disabled = false;
+          const arrayBuffer = await file.arrayBuffer();
+          pdfInstance = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-        fileNameInput.value = file.name.replace(/\.pdf$/i, '') + '_remapeado';
+          currentMode = "pdf";
+          fileNameInput.value = `${baseNameWithoutExt(file.name)}_remapeado`;
 
-        await renderPreviewPage(currentPage);
+          setLoadedState(true);
+          await renderPreviewPage(1);
+          return;
+        }
+
+        if (isImageFile(file)) {
+          statusEl.textContent = "Cargando imagen...";
+          fileTypeBadgeEl.textContent = "Tipo: imagen";
+
+          currentImage = await loadImageElementFromFile(file);
+          currentImageName = file.name;
+          currentImageType = file.type;
+          currentMode = "image";
+
+          fileNameInput.value = `${baseNameWithoutExt(file.name)}_remapeado`;
+
+          setLoadedState(true);
+          await renderPreviewImage();
+          return;
+        }
+
+        throw new Error("Formato no soportado.");
       } catch (error) {
         console.error(error);
-        alert('Error cargando el PDF.');
-        statusEl.textContent = 'Error cargando PDF';
-      } finally {
-        URL.revokeObjectURL(url);
+        statusEl.textContent = "Error cargando archivo";
+        fileTypeBadgeEl.textContent = "Tipo: —";
+        pageIndicatorEl.textContent = "Página 0 / 0";
+        alert("Subí un PDF, PNG o JPG válido.");
       }
     });
 
-    previewButton.addEventListener('click', async () => {
-      if (!pdfInstance) return;
-      await renderPreviewPage(currentPage);
+    previewButton.addEventListener("click", async () => {
+      if (currentMode === "pdf" && pdfInstance) {
+        await renderPreviewPage(currentPage);
+      } else if (currentMode === "image" && currentImage) {
+        await renderPreviewImage();
+      }
     });
 
-    prevPageButton.addEventListener('click', async () => {
+    prevPageButton.addEventListener("click", async () => {
       if (!pdfInstance || currentPage <= 1) return;
       currentPage -= 1;
       await renderPreviewPage(currentPage);
     });
 
-    nextPageButton.addEventListener('click', async () => {
+    nextPageButton.addEventListener("click", async () => {
       if (!pdfInstance || currentPage >= pdfInstance.numPages) return;
       currentPage += 1;
       await renderPreviewPage(currentPage);
     });
 
     [
-      sourceLightInput, sourceDarkInput,
-      targetLightInput, targetDarkInput,
-      thresholdInput, thresholdNumberInput,
-      softnessInput, softnessNumberInput
-    ].forEach(el => {
-      el.addEventListener('input', () => {
-        if (pdfInstance) renderPreviewPage(currentPage);
+      sourceLightInput,
+      sourceDarkInput,
+      targetLightInput,
+      targetDarkInput,
+      thresholdInput,
+      thresholdNumberInput,
+      softnessInput,
+      softnessNumberInput
+    ].forEach((el) => {
+      el.addEventListener("input", async () => {
+        if (currentMode === "pdf" && pdfInstance) {
+          await renderPreviewPage(currentPage);
+        } else if (currentMode === "image" && currentImage) {
+          await renderPreviewImage();
+        }
       });
     });
 
-    downloadButton.addEventListener('click', async () => {
-      if (!pdfInstance) return;
+    downloadButton.addEventListener("click", async () => {
+      if (!currentMode) return;
 
       downloadButton.disabled = true;
       previewButton.disabled = true;
-      statusEl.textContent = 'Generando PDF...';
 
       try {
-        const resolution = Number(resolutionSelect.value);
-        const fileName = (fileNameInput.value || 'pdf_remapeado').trim();
-
-        let doc = null;
-
-        for (let pageNumber = 1; pageNumber <= pdfInstance.numPages; pageNumber++) {
-          statusEl.textContent = `Procesando página ${pageNumber} de ${pdfInstance.numPages}...`;
-
-          const tempCanvas = document.createElement('canvas');
-          const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
-
-          const viewport = await renderPageToCanvas(
-            pageNumber,
-            resolution / 72,
-            tempCanvas,
-            tempCtx
-          );
-
-          const pageWidth = (viewport.width * 72) / resolution;
-          const pageHeight = (viewport.height * 72) / resolution;
-
-          if (!doc) {
-            doc = new jsPDF({
-              orientation: pageWidth > pageHeight ? 'landscape' : 'portrait',
-              unit: 'pt',
-              format: [pageWidth, pageHeight]
-            });
-          } else {
-            doc.addPage([pageWidth, pageHeight], pageWidth > pageHeight ? 'landscape' : 'portrait');
-            doc.setPage(pageNumber);
-          }
-
-          const imgData = tempCanvas.toDataURL('image/jpeg', 0.92);
-          doc.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
+        if (currentMode === "image") {
+          statusEl.textContent = "Generando imagen...";
+          await exportCurrentImage();
+          statusEl.textContent = "Imagen lista";
+          return;
         }
 
-        doc.save(`${fileName}.pdf`);
-        statusEl.textContent = 'PDF listo';
+        if (currentMode === "pdf") {
+          statusEl.textContent = "Generando PDF...";
+
+          const resolution = Number(resolutionSelect.value);
+          const fileName = (fileNameInput.value || "archivo_remapeado").trim();
+
+          let doc = null;
+
+          for (let pageNumber = 1; pageNumber <= pdfInstance.numPages; pageNumber++) {
+            statusEl.textContent = `Procesando página ${pageNumber} de ${pdfInstance.numPages}...`;
+
+            const tempCanvas = document.createElement("canvas");
+            const tempCtx = tempCanvas.getContext("2d", { willReadFrequently: true });
+
+            const viewport = await renderPageToCanvas(
+              pageNumber,
+              resolution / 72,
+              tempCanvas,
+              tempCtx
+            );
+
+            const pageWidth = (viewport.width * 72) / resolution;
+            const pageHeight = (viewport.height * 72) / resolution;
+            const orientation = pageWidth > pageHeight ? "landscape" : "portrait";
+
+            if (!doc) {
+              doc = new jsPDF({
+                orientation,
+                unit: "pt",
+                format: [pageWidth, pageHeight]
+              });
+            } else {
+              doc.addPage([pageWidth, pageHeight], orientation);
+              doc.setPage(pageNumber);
+            }
+
+            const imgData = tempCanvas.toDataURL("image/jpeg", 0.92);
+            doc.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
+          }
+
+          doc.save(`${fileName}.pdf`);
+          statusEl.textContent = "PDF listo";
+        }
       } catch (error) {
         console.error(error);
-        alert('Error generando el PDF.');
-        statusEl.textContent = 'Error generando PDF';
+        statusEl.textContent = "Error generando archivo";
+        alert("Error generando el archivo.");
       } finally {
         downloadButton.disabled = false;
         previewButton.disabled = false;
