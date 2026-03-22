@@ -318,8 +318,10 @@
   <div class="wrap">
     <h1>PDF / Image Color Mapper</h1>
     <p class="subtitle">
-      Cargá un PDF, PNG o JPG, elegí los colores de origen y destino, previsualizá el resultado y descargalo.
-      Los PDF se reconstruyen como imágenes dentro de un PDF nuevo.
+      1. Cargá un archivo (PDF, PNG o JPG).<br>
+      2. Elegí un preset o configurá los colores manualmente abajo.<br>
+      3. Presioná <strong>Actualizar preview</strong> para ver el resultado.<br>
+      4. Cuando estés conforme, descargá el archivo con el botón de arriba.
     </p>
 
     <div class="grid">
@@ -341,42 +343,11 @@
         <button id="download-button" class="action-btn" disabled>Descargar archivo</button>
 
         <div class="field">
-          <label for="resolution">Resolución de exportación PDF</label>
-          <select id="resolution">
-            <option value="72">72 PPI (bajo)</option>
-            <option value="150">150 PPI (medio)</option>
-            <option value="300" selected>300 PPI (alto)</option>
-          </select>
-          <div class="small-note">Para PNG/JPG no afecta la exportación.</div>
-        </div>
-
-        <div class="row-2">
-          <div class="field">
-            <label for="source-light">Color claro origen</label>
-            <input type="color" id="source-light" value="#ffffff" />
-          </div>
-          <div class="field">
-            <label for="target-light">Destino del claro</label>
-            <input type="color" id="target-light" value="#1b0e01" />
-          </div>
-        </div>
-
-        <div class="row-2">
-          <div class="field">
-            <label for="source-dark">Color oscuro origen</label>
-            <input type="color" id="source-dark" value="#000000" />
-          </div>
-          <div class="field">
-            <label for="target-dark">Destino del oscuro</label>
-            <input type="color" id="target-dark" value="#c4a073" />
-          </div>
-        </div>
-        <div class="field">
           <label>Presets</label>
           <div class="presets">
             <button class="secondary-btn" type="button" data-preset="orodark">Oro oscuro</button>
             <button class="secondary-btn" type="button" data-preset="amberdark">Crema oscuro</button>
-            <button class="secondary-btn" type="button" data-preset="sepiahc">Sepia</button>
+            <button class="secondary-btn" type="button" data-preset="negroblanc">Negro y blanco</button>
             <button class="secondary-btn" type="button" data-preset="nochecalida">Noche dorada</button>
             <button class="secondary-btn" type="button" data-preset="sinreflejo">Amarillo nocturno</button>
             <button class="secondary-btn" type="button" data-preset="carbonrojo">Salmón oscuro</button>
@@ -430,6 +401,15 @@
           <summary>Configuración avanzada</summary>
           <div class="inner">
             <div class="field">
+              <label for="resolution">Resolución de exportación PDF</label>
+              <select id="resolution">
+                <option value="72">72 PPI (bajo)</option>
+                <option value="150">150 PPI (medio)</option>
+                <option value="300" selected>300 PPI (alto)</option>
+              </select>
+              <div class="small-note">Para PNG/JPG no afecta la exportación.</div>
+            </div>
+            <div class="field">
               <label for="threshold">Umbral</label>
               <div class="range-line">
                 <input type="range" id="threshold" min="0" max="255" value="150" />
@@ -448,6 +428,28 @@
 
         <div class="note">
           En PDF, el archivo final no conserva texto seleccionable porque cada página se rasteriza.
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="source-light">Color claro origen</label>
+            <input type="color" id="source-light" value="#ffffff" />
+          </div>
+          <div class="field">
+            <label for="target-light">Destino del claro</label>
+            <input type="color" id="target-light" value="#1b0e01" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="source-dark">Color oscuro origen</label>
+            <input type="color" id="source-dark" value="#000000" />
+          </div>
+          <div class="field">
+            <label for="target-dark">Destino del oscuro</label>
+            <input type="color" id="target-dark" value="#c4a073" />
+          </div>
         </div>
       </div>
 
@@ -593,13 +595,13 @@
         threshold: 145,
         softness: 75
       },
-      sepiahc: {
+      negroblanc: {
         sourceLight: "#ffffff",
         sourceDark: "#000000",
-        targetLight: "#241b14",
-        targetDark: "#f4e7c2",
+        targetLight: "#000000",
+        targetDark: "#ffffff",
         threshold: 150,
-        softness: 62
+        softness: 40
       },
       warmgray: {
         sourceLight: "#ffffff",
